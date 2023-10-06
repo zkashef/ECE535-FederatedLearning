@@ -1,5 +1,24 @@
-This repository contains the source code and data of the paper [Multimodal
-Federated Learning on IoT Data](https://arxiv.org/abs/2109.04833).
+• Motivation
+My motivation for choosing this project is because I would like to gain experience creating multimodals with Federated Learning using IoT data.
+I'm interesting in analyzing plant health in grow operations using image and various environemntal sensor data. Perhaps this project will lend me some applicable knowledge to such.
+
+• Design goals
+Create multimodal FedAvg algorithm to aggregate local autoencoders trained on various data modalities.
+
+• Deliverables
+Demonstrate that training multiple modalities with federated learning on IoT data improves classification performance by benchmarking different multimodal datasets.
+
+• System blocks
+Dataset -> Semi-supervised Federated Learning Training -> Multimodal
+
+• Hardware and software requirements
+This is a software focused project with various required libraries. A functional CPU or ideally GPU is the only hardware requirement.
+
+• Team members responsibilities
+Zachary Kashef - All the responsibility
+
+• References
+[Multimodal Federated Learning on IoT Data](https://arxiv.org/abs/2109.04833).
 
 # Directory structure
 * *src*: source code

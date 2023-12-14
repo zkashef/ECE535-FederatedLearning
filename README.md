@@ -9,13 +9,7 @@ I'm interesting in analyzing plant health in grow operations using image and var
 - Demonstrate that training multiple modalities with federated learning on IoT data improves classification performance by benchmarking different multimodal datasets.
 
 • System blocks
-- Dataset -> Semi-supervised Federated Learning Training -> Multimodal
-
-• Hardware and software requirements
-- This is a software focused project with various required libraries. A functional CPU or ideally GPU is the only hardware requirement.
-
-• Team members responsibilities
-- Zachary Kashef - All the responsibility
+- Dataset -> Semi-supervised Federated Learning Training -> Analysis of Results
 
 • References
 - [Multimodal Federated Learning on IoT Data](https://arxiv.org/abs/2109.04833).

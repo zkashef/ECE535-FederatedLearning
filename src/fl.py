@@ -24,7 +24,8 @@ class FL:
 
     def start(self):
         """Starts the FL communication rounds between the server and clients."""
-
+        # print current working directory
+        print("cwd: ", os.getcwd())
         # Loads the training and testing data of the FL simumation
         data_train, data_test = load_data(self.config)
 
@@ -58,7 +59,7 @@ class FL:
 
         n_eval_point = math.ceil(self.rounds / self.eval_interval)
         # result table: round, local_ae_loss, train_loss, train_accuracy, test_loss, test_accuracy, test_f1
-        result_table = np.zeros((n_eval_point, 7))
+        result_table = np.zeros((n_eval_point, 57))
         result_table[:, 0] = np.arange(1, self.rounds+1, self.eval_interval)
         row = 0
 
@@ -82,10 +83,16 @@ class FL:
                 continue
             else:
                 with torch.no_grad():
-                    test_loss, test_accuracy, test_f1 = server.eval(
-                        server_test)
+                    test_loss, test_accuracy, test_f1, class_occurances_correct, class_occurances_total = server.eval(server_test)
+
+
+                #print("class_occurances_correct len", len(class_occurances_correct))
+                #print(class_occurances_correct)
+                #print("class_occurances_total len", len(class_occurances_total))
+                #print(class_occurances_total)
+
                 result_table[row] = np.array(
-                    (t+1, local_ae_loss, train_loss, train_accuracy, test_loss, test_accuracy, test_f1))
+                   (t+1, local_ae_loss, train_loss, train_accuracy, test_loss, test_accuracy, test_f1,  *class_occurances_correct, *class_occurances_total))
                 row += 1
                 self.write_result(result_table)
 
@@ -102,3 +109,4 @@ class FL:
         Path(results_path).mkdir(parents=True, exist_ok=True)
         np.savetxt(os.path.join(results_path, "results.txt"),
                    result_table, delimiter=",", fmt="%1.4e")
+        

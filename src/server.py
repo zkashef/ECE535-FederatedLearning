@@ -9,7 +9,6 @@ from sklearn.metrics import f1_score
 
 EVAL_WIN = 2000
 
-
 class Server:
     def __init__(self, train_A, train_B, config):
         self.device = torch.device(
@@ -236,12 +235,17 @@ class Server:
         n_samples = x_samples.shape[1]
         n_eval_process = n_samples // EVAL_WIN + 1
 
+        # np_gt is a numpy.ndarray of labels (classes)
+        # equals is a tensor of booleans representing if the model correctly guessed 
+        class_occurances_total = [0] * 25
+        class_occurances_correct = [0] * 25
+
         for i in range(n_eval_process):
             idx_start = i * EVAL_WIN
             idx_end = np.min((n_samples, idx_start+EVAL_WIN))
             x = x_samples[:, idx_start:idx_end, :]
             y = y_samples[:, idx_start:idx_end]
-
+        
             inputs = torch.from_numpy(x).double().to(self.device)
             targets = torch.from_numpy(y.flatten()).to(self.device)
             rpts = self.global_ae.encode(inputs, self.test_modality)
@@ -259,7 +263,25 @@ class Server:
             win_accuracy.append(accuracy)
             win_f1.append(weighted_f1)
 
+            # count the number of times each class was predicted correctly
+            # loop through each prediction
+            for i in range(len(np_gt)): 
+                class_index = np_gt[i]
+                #print("print(class_index)", class_index)
+                # increment total occurances for that class
+                class_occurances_total[int(class_index)] += 1
+                # if the prediction was correct, increment correct occurances for that class
+                if equals[i] == True:
+                    class_occurances_correct[int(class_index)] += 1
+
+            # print("class_occurances_correct len", len(class_occurances_correct))
+            # print(class_occurances_correct)
+
+            # print("\nclass_occurances_total len", len(class_occurances_total))
+            # print(class_occurances_total)
+
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-
-        return np.mean(win_loss), np.mean(win_accuracy), np.mean(win_weighted_f1)
+        
+       
+        return np.mean(win_loss), np.mean(win_accuracy), np.mean(weighted_f1), class_occurances_correct, class_occurances_total
